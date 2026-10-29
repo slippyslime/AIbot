@@ -25,6 +25,8 @@ def index(request):
 @require_POST
 def chat(request):
     form = QuestionForm(request.POST)
+    if not form.is_valid():
+        return _render(request, form, status=400)
     question = form.cleaned_data['question']
     answer_text = ai.ask(question)
     message = Message.objects.create(user_text=question, ai_text=answer_text)
